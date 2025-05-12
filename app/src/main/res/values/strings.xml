@@ -19,4 +19,9 @@
     <string name="custom_range">Custom Range</string>
     <string name="enter_your_salary_amount">Enter your salary amount:</string>
     <string name="amount_in_rands">Amount in Rands</string>
+    <string name="expenses_by_categories">EXPENSES BY CATEGORIES</string>
+    <string name="add_salary">ADD SALARY</string>
+    <string name="hi_user">Hi, User</string>
+    <string name="r_25_000_00">R 25 000.00</string>
+    <string name="view_expenses">VIEW EXPENSES</string>
 </resources>
