@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">BudgetFuture</string>
+    <string name="button">Button</string>
+    <string name="welcome">WELCOME</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="this_week">This Week</string>
+    <string name="this_month">This Month</string>
+    <string name="custom_range">Custom Range</string>
+    <string name="enter_your_salary_amount">Enter your salary amount:</string>
+    <string name="amount_in_rands">Amount in Rands</string>
+</resources>

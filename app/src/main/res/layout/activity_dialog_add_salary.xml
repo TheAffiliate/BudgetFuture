@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#070C29">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enter_your_salary_amount"
+        android:textColor="#EEE3BA42"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/editTextSalary"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="@string/amount_in_rands"
+        android:inputType="numberDecimal"
+        android:maxLines="1"
+        android:backgroundTint="#EEE3BA42"
+        android:textColor="@color/black"
+        android:textColorHint="#8D8D8D"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:background="@android:drawable/edit_text"/>
+
+</LinearLayout>
