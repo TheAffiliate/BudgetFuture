@@ -38,7 +38,7 @@ class Dashboard : AppCompatActivity() {
         expensesContainer = findViewById(R.id.expensesContainer)
         buttonAddExpenses = findViewById(R.id.expensebtn)
         buttonViewExpenses = findViewById(R.id.viewExpensebtn)
-        //buttonAddSalary = findViewById(R.id.addSalaryBtn)
+        buttonAddSalary = findViewById(R.id.addSalaryBtn)
 
         expenseDB = Room.databaseBuilder(this, ExpenseDatabase::class.java, EXPENSE_DATABASE)
             .allowMainThreadQueries()
