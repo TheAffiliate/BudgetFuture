@@ -4,13 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.example.budgetfuture.database.ExpenseDatabase
 import com.example.budgetfuture.utils.Constants.EXPENSE_DATABASE
+import com.example.budgetfuture.gamification.GamificationEngine
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,8 +28,17 @@ class Dashboard : AppCompatActivity() {
     private lateinit var buttonAddExpenses: Button
     private lateinit var buttonViewExpenses: Button
     private lateinit var buttonAddSalary: Button
-    private var currentBalance: Double = 0.0
+    private lateinit var levelText: TextView
+    private lateinit var xpProgress: ProgressBar
+    private lateinit var badge: ImageView
+    private lateinit var pieChart: PieChart
+
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var gamification: GamificationEngine
+
+    private var currentBalance: Double = 0.0
+    private var totalExpenses = 0f
+    private val maxBudget = 1000f // Adjustable as needed
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +53,13 @@ class Dashboard : AppCompatActivity() {
         buttonAddExpenses = findViewById(R.id.expensebtn)
         buttonViewExpenses = findViewById(R.id.viewExpensebtn)
         buttonAddSalary = findViewById(R.id.addSalaryBtn)
+        levelText = findViewById(R.id.levelText)
+        xpProgress = findViewById(R.id.xpProgress)
+        badge = findViewById(R.id.congratsBadge)
+        pieChart = findViewById(R.id.pieChart)
+
+        gamification = GamificationEngine(this, levelText, xpProgress, badge)
+        gamification.setMaxBudget(maxBudget)
 
         expenseDB = Room.databaseBuilder(this, ExpenseDatabase::class.java, EXPENSE_DATABASE)
             .allowMainThreadQueries()
@@ -80,7 +101,8 @@ class Dashboard : AppCompatActivity() {
 
         val inflater = layoutInflater
         val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        var totalExpenses = 0.0
+        var total = 0f
+        val pieEntries = mutableListOf<PieEntry>()
 
         for (expense in expensesList) {
             val view = inflater.inflate(R.layout.item_expense, expensesContainer, false)
@@ -89,12 +111,26 @@ class Dashboard : AppCompatActivity() {
             view.findViewById<TextView>(R.id.tvDate).text = format.format(expense.DateOfExpense)
             view.findViewById<TextView>(R.id.tvDescription).text = expense.Description
             expensesContainer.addView(view)
-            totalExpenses += expense.amount
+
+            total += expense.amount.toFloat()
+            pieEntries.add(PieEntry(expense.amount.toFloat(), expense.CategoryName))
+            gamification.registerExpense(expense.amount.toFloat(), total)
         }
 
+        totalExpenses = total
         val savedBalance = sharedPreferences.getFloat("currentBalance", 0.0f).toDouble()
-        currentBalance = savedBalance - totalExpenses
+        currentBalance = savedBalance - total
         updateBalanceDisplay()
+
+        updateChart(pieEntries)
+    }
+
+    private fun updateChart(entries: List<PieEntry>) {
+        val dataSet = PieDataSet(entries, "Expenses by Category")
+        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        val pieData = PieData(dataSet)
+        pieChart.data = pieData
+        pieChart.invalidate()
     }
 
     private fun showSalaryDialog() {
@@ -111,7 +147,7 @@ class Dashboard : AppCompatActivity() {
                     val totalExpenses = expenseDB.dao().getAllExpenses().sumOf { it.amount }
                     currentBalance = salaryAmount - totalExpenses
                     with(sharedPreferences.edit()) {
-                        putFloat("currentBalance", salaryAmount.toFloat()) // store original salary
+                        putFloat("currentBalance", salaryAmount.toFloat())
                         apply()
                     }
                     updateBalanceDisplay()
